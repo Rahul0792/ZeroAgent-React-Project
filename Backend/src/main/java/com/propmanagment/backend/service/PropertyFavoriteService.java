@@ -15,74 +15,91 @@ import com.propmanagment.backend.repository.PropertyFavoriteRepository;
 import com.propmanagment.backend.repository.PropertyRepository;
 import com.propmanagment.backend.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PropertyFavoriteService {
-    
+
     @Autowired
     private PropertyFavoriteRepository propertyFavoriteRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private PropertyRepository propertyRepository;
-    
+
+    // -------------------------------------------
+    // GET ALL FAVORITES BY USER
+    // -------------------------------------------
     public List<PropertyFavoriteDTO> getFavoritesByUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            List<PropertyFavorite> favorites = propertyFavoriteRepository.findByUser(user.get());
-            return favorites.stream().map(this::convertToDTO).collect(Collectors.toList());
-        }
-        return List.of();
+        return userRepository.findById(userId)
+                .map(user -> propertyFavoriteRepository.findByUser(user)
+                        .stream()
+                        .map(this::convertToDTO)
+                        .collect(Collectors.toList()))
+                .orElse(List.of());
     }
-    
+
+    // -------------------------------------------
+    // CHECK IF FAVORITED
+    // -------------------------------------------
     public boolean isPropertyFavorited(Long userId, Long propertyId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Property> property = propertyRepository.findById(propertyId);
-        
-        if (user.isPresent() && property.isPresent()) {
-            Optional<PropertyFavorite> favorite = propertyFavoriteRepository.findByUserAndProperty(user.get(), property.get());
-            return favorite.isPresent();
-        }
-        return false;
+        return userRepository.findById(userId)
+                .flatMap(user -> propertyRepository.findById(propertyId)
+                        .flatMap(property -> propertyFavoriteRepository.findByUserAndProperty(user, property)))
+                .isPresent();
     }
-    
+
+    // -------------------------------------------
+    // ADD FAVORITE
+    // -------------------------------------------
     public PropertyFavoriteDTO addFavorite(Long userId, Long propertyId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Property> property = propertyRepository.findById(propertyId);
-        
-        if (user.isPresent() && property.isPresent()) {
-            // Check if already favorited - if so, just return the existing favorite
-            Optional<PropertyFavorite> existingFavorite = propertyFavoriteRepository.findByUserAndProperty(user.get(), property.get());
-            if (existingFavorite.isPresent()) {
-                return convertToDTO(existingFavorite.get());
-            }
-            
-            PropertyFavorite favorite = new PropertyFavorite(user.get(), property.get());
-            PropertyFavorite savedFavorite = propertyFavoriteRepository.save(favorite);
-            return convertToDTO(savedFavorite);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+
+        // Check if already exists → return existing
+        Optional<PropertyFavorite> existing = propertyFavoriteRepository.findByUserAndProperty(user, property);
+        if (existing.isPresent()) {
+            return convertToDTO(existing.get());
         }
-        throw new RuntimeException("User or Property not found");
+
+        PropertyFavorite favorite = new PropertyFavorite(user, property);
+        PropertyFavorite saved = propertyFavoriteRepository.save(favorite);
+        return convertToDTO(saved);
     }
-    
+
+    // -------------------------------------------
+    // REMOVE FAVORITE
+    // -------------------------------------------
+    @Transactional
     public void removeFavorite(Long userId, Long propertyId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Property> property = propertyRepository.findById(propertyId);
-        
-        if (user.isPresent() && property.isPresent()) {
-            // Simply try to delete - if it doesn't exist, nothing happens
-            propertyFavoriteRepository.deleteByUserAndProperty(user.get(), property.get());
-        } else {
-            throw new RuntimeException("User or Property not found");
-        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Property property = propertyRepository.findById(propertyId)
+                .orElseThrow(() -> new RuntimeException("Property not found"));
+
+        // If already not favorited → do nothing silently
+        propertyFavoriteRepository.deleteByUserAndProperty(user, property);
     }
-    
-    private PropertyFavoriteDTO convertToDTO(PropertyFavorite favorite) {
+
+    // -------------------------------------------
+    // MAPPER
+    // -------------------------------------------
+    private PropertyFavoriteDTO convertToDTO(PropertyFavorite entity) {
         PropertyFavoriteDTO dto = new PropertyFavoriteDTO();
-        dto.setId(favorite.getId());
-        dto.setUserId(favorite.getUser().getId());
-        dto.setProperty(favorite.getProperty());
-        dto.setCreatedAt(favorite.getCreatedAt());
+
+        dto.setId(entity.getId());
+        dto.setUserId(entity.getUser().getId());
+        dto.setProperty(entity.getProperty());
+        dto.setCreatedAt(entity.getCreatedAt());
+
         return dto;
     }
 }

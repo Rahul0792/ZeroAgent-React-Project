@@ -74,6 +74,7 @@ public class AuthController {
                         "id", user.getId(),
                         "name", user.getName(),
                         "email", user.getEmail(),
+                        "phone", user.getPhone(), 
                         "role", user.getRole().name()));
 
                 log.info("User {} logged in successfully", email);
