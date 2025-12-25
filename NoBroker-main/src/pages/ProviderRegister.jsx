@@ -85,7 +85,7 @@ export default function ProviderRegister() {
     };
 
     try {
-      const res = await fetch("http://192.168.31.224:8080/api/providers", {
+      const res = await fetch("http://172.20.10.5:8080/api/providers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(providerData),

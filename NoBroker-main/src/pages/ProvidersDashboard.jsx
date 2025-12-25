@@ -61,7 +61,7 @@ export default function ProviderDashboard() {
   const fetchBookings = async (providerId) => {
     try {
       const resp = await fetch(
-        `http://192.168.31.224:8080/api/bookings/provider/${providerId}`
+        `http://172.20.10.5:8080/api/bookings/provider/${providerId}`
       );
       if (!resp.ok) throw new Error("Failed to load bookings");
       const data = await resp.json();
@@ -84,7 +84,7 @@ export default function ProviderDashboard() {
     setUpdatingId(id);
     try {
       const resp = await fetch(
-        `http://192.168.31.224:8080/api/bookings/${id}/status?status=COMPLETED`,
+        `http://172.20.10.5:8080/api/bookings/${id}/status?status=COMPLETED`,
         { method: "PUT" }
       );
 
@@ -104,7 +104,7 @@ export default function ProviderDashboard() {
 
     try {
       const resp = await fetch(
-        `http://192.168.31.224:8080/api/bookings/${id}`,
+        `http://172.20.10.5:8080/api/bookings/${id}`,
         { method: "DELETE" }
       );
 
@@ -120,7 +120,7 @@ export default function ProviderDashboard() {
   const handleSaveProfile = async () => {
     try {
       const resp = await fetch(
-        `http://192.168.31.224:8080/api/providers/${provider.id}`,
+        `http://172.20.10.5:8080/api/providers/${provider.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

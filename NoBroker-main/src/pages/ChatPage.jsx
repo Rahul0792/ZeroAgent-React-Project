@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FiArrowLeft, FiSend } from "react-icons/fi";
 
-const BASE_URL = "http://192.168.31.224:8080/api/chat";
+const BASE_URL = "http://172.20.10.5:8080/api/chat";
 
 export default function ChatPage(){
   const [messages, setMessages] = useState([]);

@@ -39,7 +39,7 @@ export default function PayRentPage() {
       setError("")
       try {
         // Fetch all properties from backend
-        const response = await fetch("http://localhost:8080/api/properties")
+        const response = await fetch("http://172.20.10.5:8080/api/properties")
         if (!response.ok) {
           throw new Error("Failed to fetch properties")
         }
@@ -91,7 +91,7 @@ export default function PayRentPage() {
     setLoading(true)
     setError("")
     try {
-      const response = await fetch(`http://localhost:8080/api/properties/${id}`)
+      const response = await fetch(`http://172.20.10.5:8080/api/properties/${id}`)
       if (!response.ok) {
         throw new Error("Failed to fetch property")
       }

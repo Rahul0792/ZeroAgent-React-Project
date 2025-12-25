@@ -29,7 +29,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/forgot-password",
+        "http://172.20.10.5:8080/api/auth/forgot-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

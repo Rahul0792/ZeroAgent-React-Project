@@ -33,7 +33,7 @@ export default function VerifyAndReset() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/verify-otp",
+        "http://172.20.10.5:8080/api/auth/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -74,7 +74,7 @@ export default function VerifyAndReset() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/reset-password",
+        "http://172.20.10.5:8080/api/auth/reset-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

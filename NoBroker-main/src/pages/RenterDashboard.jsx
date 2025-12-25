@@ -88,7 +88,7 @@ export default function RenterDashboard() {
   // ----------------------------------
   const fetchProperties = async () => {
     try {
-      const resp = await fetch("http://localhost:8080/api/properties");
+      const resp = await fetch("http://172.20.10.5:8080/api/properties");
       const data = await resp.json();
       setProperties(data);
     } catch {
@@ -99,7 +99,7 @@ export default function RenterDashboard() {
   const fetchFavorites = async (userId) => {
     try {
       const resp = await fetch(
-        `http://localhost:8080/api/favorites/user/${userId}`,
+        `http://172.20.10.5:8080/api/favorites/user/${userId}`,
         {
           headers: { "User-Id": String(userId) },
         }
@@ -123,7 +123,7 @@ export default function RenterDashboard() {
   const fetchUserInquiries = async (userId) => {
     try {
       const resp = await fetch(
-        `http://localhost:8080/api/inquiries/renter/${userId}`,
+        `http://172.20.10.5:8080/api/inquiries/renter/${userId}`,
         {
           headers: { "User-Id": String(userId) },
         }
@@ -152,7 +152,7 @@ export default function RenterDashboard() {
       if (isFav) {
         // DELETE favorite
         await fetch(
-          `http://localhost:8080/api/favorites?propertyId=${propertyId}`,
+          `http://172.20.10.5:8080/api/favorites?propertyId=${propertyId}`,
           {
             method: "DELETE",
             headers: { "User-Id": String(userData.id) },
@@ -165,7 +165,7 @@ export default function RenterDashboard() {
       } else {
         // ADD favorite
         const resp = await fetch(
-          `http://localhost:8080/api/favorites?propertyId=${propertyId}`,
+          `http://172.20.10.5:8080/api/favorites?propertyId=${propertyId}`,
           {
             method: "POST",
             headers: { "User-Id": String(userData.id) },
@@ -213,7 +213,7 @@ export default function RenterDashboard() {
       };
 
       const resp = await fetch(
-        `http://localhost:8080/api/users/${userData.id}`,
+        `http://172.20.10.5:8080/api/users/${userData.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

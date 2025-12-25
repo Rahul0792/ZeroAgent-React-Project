@@ -51,7 +51,7 @@ export default function RentAgreement() {
       };
 
       const resp = await fetch(
-        "http://192.168.31.224:8080/api/rent-agreement/create",
+        "http://172.20.10.5:8080/api/rent-agreement/create",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

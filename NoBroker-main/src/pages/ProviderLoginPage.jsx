@@ -33,7 +33,7 @@ export default function ProviderLogin() {
 
     try {
       const response = await fetch(
-        "http://192.168.31.224:8080/api/providers/login",
+        "http://172.20.10.5:8080/api/providers/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

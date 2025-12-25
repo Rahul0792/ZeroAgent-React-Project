@@ -15,7 +15,7 @@ public class AdminUserSetup {
     @Bean
     CommandLineRunner init(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            String adminEmail = "snehaltikole14@gmail.com"; // the email you want for admin
+            String adminEmail = "admin@gmail.com"; // the email you want for admin
 
             // Check if admin user already exists by email
             if (!userRepository.existsByEmail(adminEmail)) {

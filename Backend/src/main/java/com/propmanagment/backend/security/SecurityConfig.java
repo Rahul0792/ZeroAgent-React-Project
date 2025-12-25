@@ -1,6 +1,6 @@
 package com.propmanagment.backend.security;
 
-
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +9,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
@@ -23,49 +23,90 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(  "/api/auth/login",
-                		"/api/auth/verify-otp",
-                       
-                        "/api/auth/forgot-password",
-                        "/api/auth/reset-password").permitAll()
-                .requestMatchers("/api/users/**").permitAll()
-                .requestMatchers("/api/providers/**").permitAll()
 
-                // ===== PUBLIC SERVICE CATEGORIES =====
-                .requestMatchers("/api/categories/**").permitAll()
+        http
+                // ✅ ENABLE CORS
+                .cors(cors -> {})
+                // ✅ DISABLE CSRF (API)
+                .csrf(csrf -> csrf.disable())
 
-                .requestMatchers("/uploads/**").permitAll()
-                .requestMatchers("/api/properties/**").permitAll() 
-                // ===== PUBLIC FAVORITES, INQUIRIES, NOTIFICATIONS =====
-                .requestMatchers("/api/favorites/**",
-							     "/api/inquiries/**",
-							     "/api/notifications/**").permitAll()
+                // ✅ STATELESS JWT
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                .requestMatchers("/api/admin/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .authorizeHttpRequests(auth -> auth
 
-        
-                
-              
-                .requestMatchers("/api/bookings/**").permitAll()
-                
-                .requestMatchers("/api/payments/**").authenticated()
+                        // ✅ CORS PREFLIGHT
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 
-                .requestMatchers("/api/debug/**").permitAll()
-                .requestMatchers("/api/razorpay/**").permitAll()
-                .requestMatchers("/api/chat").permitAll() 
-                .requestMatchers("/api/rent-agreement/**").permitAll()
-                
-         
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        // ===== AUTH =====
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/verify-otp",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password"
+                        ).permitAll()
 
+                        // ===== PUBLIC APIs =====
+                        .requestMatchers(
+                                "/api/users/**",
+                                "/api/providers/**",
+                                "/api/categories/**",
+                                "/api/properties/**",
+                                "/api/favorites/**",
+                                "/api/inquiries/**",
+                                "/api/notifications/**",
+                                "/api/bookings/**",
+                                "/api/debug/**",
+                                "/api/razorpay/**",
+                                "/api/chat",
+                                "/api/rent-agreement/**",
+                                "/uploads/**"
+                        ).permitAll()
+
+                        // 🔐 ADMIN ONLY (JWT MUST HAVE ROLE_ADMIN)
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+
+                        // 🔐 AUTHENTICATED USERS
+                        .requestMatchers("/api/payments/**").authenticated()
+
+                        .anyRequest().authenticated()
+                );
+
+        // ✅ JWT FILTER
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // ✅ CORRECT CORS CONFIG
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        // ✅ FRONTEND ORIGINS (ADD IP ALSO)
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://172.20.10.5:5173"
+        ));
+
+        config.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
+
+        config.setAllowedHeaders(List.of("*"));
+
+        // ❗ IMPORTANT
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 
     @Bean

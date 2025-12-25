@@ -1,5 +1,5 @@
 // Admin API service for making requests to the backend
-const API_BASE_URL = 'http://localhost:8080/api/admin';
+const API_BASE_URL = 'http://172.20.10.5:8080/api/admin';
 
 // Helper function to get user data from localStorage
 const getUserData = () => {

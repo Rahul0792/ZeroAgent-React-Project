@@ -11,7 +11,7 @@ export default function TestPaymentPage() {
   const testCreateOrder = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/razorpay/create-order", {
+      const response = await fetch("http://172.20.10.5:8080/api/razorpay/create-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -34,7 +34,7 @@ export default function TestPaymentPage() {
   const testVerifyPayment = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/razorpay/verify-payment", {
+      const response = await fetch("http://172.20.10.5:8080/api/razorpay/verify-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

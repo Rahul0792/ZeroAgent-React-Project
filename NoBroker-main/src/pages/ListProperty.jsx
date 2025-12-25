@@ -117,7 +117,7 @@ export default function ListPropertyPage() {
       }
 
       const user = JSON.parse(storedUser);
-      const response = await fetch("http://localhost:8080/api/properties", {
+      const response = await fetch("http://172.20.10.5:8080/api/properties", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

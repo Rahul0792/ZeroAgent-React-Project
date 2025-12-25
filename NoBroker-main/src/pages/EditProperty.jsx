@@ -52,7 +52,7 @@ export default function EditProperty() {
       }
 
       try {
-        const res = await fetch(`http://localhost:8080/api/properties/${id}`, {
+        const res = await fetch(`http://172.20.10.5:8080/api/properties/${id}`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "User-Id": user.id.toString(),
@@ -128,7 +128,7 @@ export default function EditProperty() {
         ownerId: user.id,
       };
 
-      const res = await fetch(`http://localhost:8080/api/properties/${id}`, {
+      const res = await fetch(`http://172.20.10.5:8080/api/properties/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

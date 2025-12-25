@@ -37,7 +37,7 @@ export default function PropertyDetailPage() {
       try {
         const storedUser = localStorage.getItem("user");
         const response = await fetch(
-          `http://localhost:8080/api/properties/${id}`
+          `http://172.20.10.5:8080/api/properties/${id}`
         );
 
         if (!response.ok) throw new Error("Failed to fetch property");
@@ -70,7 +70,7 @@ export default function PropertyDetailPage() {
   const checkIfFavorited = async (userId, propertyId) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/favorites/check?propertyId=${propertyId}`,
+        `http://172.20.10.5:8080/api/favorites/check?propertyId=${propertyId}`,
         {
           headers: { "User-Id": userId.toString() },
         }
@@ -98,7 +98,7 @@ export default function PropertyDetailPage() {
 
       const method = isFavorite ? "DELETE" : "POST";
 
-      await fetch(`http://localhost:8080/api/favorites?propertyId=${id}`, {
+      await fetch(`http://172.20.10.5:8080/api/favorites?propertyId=${id}`, {
         method,
         headers: { "User-Id": userData.id.toString() },
       });
@@ -130,7 +130,7 @@ export default function PropertyDetailPage() {
         throw new Error("Please enter a message");
 
       const response = await fetch(
-        `http://localhost:8080/api/inquiries?propertyId=${id}&message=${encodeURIComponent(
+        `http://172.20.10.5:8080/api/inquiries?propertyId=${id}&message=${encodeURIComponent(
           inquiryForm.message
         )}`,
         { method: "POST", headers: { "User-Id": userData.id.toString() } }
@@ -151,7 +151,7 @@ export default function PropertyDetailPage() {
     setLoadingOwnerInfo(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/api/users/${ownerId}`
+        `http://172.20.10.5:8080/api/users/${ownerId}`
       );
 
       if (!response.ok) throw new Error("Failed to fetch owner");

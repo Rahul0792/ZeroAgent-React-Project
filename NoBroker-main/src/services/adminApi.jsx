@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080/api/admin"; // change as needed
+const API_BASE = "http://172.20.10.5:8080/api/admin"; // change as needed
 
 export const adminUsersApi = {
   // Fetch all users

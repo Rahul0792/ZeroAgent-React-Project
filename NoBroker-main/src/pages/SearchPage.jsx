@@ -40,7 +40,7 @@ export default function SearchPage() {
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:8080/api/properties");
+        const res = await fetch("http://172.20.10.5:8080/api/properties");
         if (!res.ok) throw new Error("Failed to fetch properties");
         const data = await res.json();
         setProperties(data);
@@ -60,7 +60,7 @@ export default function SearchPage() {
       if (!user || user.role !== "RENTER") return;
       try {
         const res = await fetch(
-          `http://localhost:8080/api/favorites/user/${user.id}`,
+          `http://172.20.10.5:8080/api/favorites/user/${user.id}`,
           { headers: { "User-Id": user.id.toString() } }
         );
         if (!res.ok) throw new Error("Failed to fetch favorites");
@@ -87,13 +87,13 @@ export default function SearchPage() {
     try {
       if (favorites.includes(propertyId)) {
         await fetch(
-          `http://localhost:8080/api/favorites?propertyId=${propertyId}`,
+          `http://172.20.10.5:8080/api/favorites?propertyId=${propertyId}`,
           { method: "DELETE", headers: { "User-Id": user.id.toString() } }
         );
         setFavorites(favorites.filter((id) => id !== propertyId));
       } else {
         await fetch(
-          `http://localhost:8080/api/favorites?propertyId=${propertyId}`,
+          `http://172.20.10.5:8080/api/favorites?propertyId=${propertyId}`,
           { method: "POST", headers: { "User-Id": user.id.toString() } }
         );
         setFavorites([...favorites, propertyId]);

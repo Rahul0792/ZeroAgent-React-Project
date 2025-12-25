@@ -1,5 +1,6 @@
-package com.propmanagment.backend.model;
+package com.propmanagment.backend;
 
+import com.propmanagment.backend.model.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;

@@ -39,7 +39,7 @@ export default function BookService(){
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          "http://192.168.31.224:8080/api/categories"
+          "http://172.20.10.5:8080/api/categories"
         );
         if (!response.ok) throw new Error("Failed to load categories");
 
